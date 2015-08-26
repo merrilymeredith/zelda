@@ -5,6 +5,8 @@ defmodule Zelda.Link do
   def make_link({type, id}) do
     case type do
       :zr      -> "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/#{id}"
+      :bb      -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_sandbox_Builder/builds/#{id}"
+      :bb_stg  -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_stg_Builder/builds/#{id}"
       :bugzid  -> "https://ziprecruiter.fogbugz.com/f/cases/#{id}/"
       :grafana -> "https://stats.ziprecruiter.com/grafana/dashboard/db/#{id}"
       :barkeep -> "https://barkeep.ziprecruiter.com/commits/ziprecruiter/#{id}"
