@@ -12,4 +12,12 @@ already gitignored to keep your token safe.
   $ mix deps.get
   $ mix run
 
+TODO
+----
+
+- There should be an ignore $user command so people can opt out
+- Should also just ignore users that are marked as bots
+- The simple interface provided by Slacker doesn't easily expose a way to look
+  up user and channel names from their IDs
+- Ignores should persist, and unignore should work too.
 
