@@ -4,6 +4,7 @@ defmodule ZeldaTest do
   alias Zelda.Link
   alias Zelda.Slack
   alias Zelda.Commands
+  alias Zelda.Ignore
 
   test "Link.match_token" do
     assert Link.match_token("foo zr:bac321 baz") == {:zr, "bac321"}
@@ -23,10 +24,25 @@ defmodule ZeldaTest do
     assert Link.get_link(nil) == nil
   end
 
+
   test "Commands.handle_cmd help" do
     {:ok, [help_text | _]} = Commands.handle_cmd(nil, nil, "help", nil)
     assert help_text |> String.starts_with? "Hi, I'm Zelda"
   end
 
 
+  test "Ignore" do
+    slack_id   = "U123456789"
+    slack_name = "quux"
+
+    Zelda.Repo.transaction fn ->
+      refute Ignore.is_ignored?(:slack_id, slack_id)
+
+      assert {:ok, _} = Ignore.ignore(slack_id, slack_name)
+      assert Ignore.is_ignored?(:slack_id, slack_id)
+
+      assert Ignore.unignore(:slack_name, slack_name)
+      refute Ignore.is_ignored?(:slack_id, slack_id)
+    end
+  end
 end

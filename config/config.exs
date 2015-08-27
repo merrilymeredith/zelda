@@ -25,4 +25,8 @@ use Mix.Config
 config :zelda,
   slack_token: System.get_env("SLACK_API_TOKEN")
 
-import_config "#{Mix.env}.exs"
+config :zelda, Zelda.Repo,
+  adapter:  Sqlite.Ecto,
+  database: "zelda-#{Mix.env}.sqlite"
+
+# import_config "#{Mix.env}.exs"

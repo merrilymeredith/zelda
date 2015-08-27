@@ -6,12 +6,12 @@ defmodule Zelda.Commands do
   def handle_cmd(_slack, _msg, "help", _args) do
     replies = [
       """
-      Hi, I'm Zelda, a simple bot run by Meredith H to spot short tokens
-      that include an id and reply with complete links.
+      Hi, I'm Zelda, a simple bot run by Meredith H to spot short tokens that
+      include an id and reply with complete links.
       
-      I know about the following:  zr/zrgit, bugzid, grafana, barkeep
+      I know about the following:  zr/zrgit, bb, bb_stg, bugzid, grafana, barkeep
       You can also tell me to leave.
-      """, 
+      """,
     ]
     
     {:ok, replies}

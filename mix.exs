@@ -15,7 +15,7 @@ defmodule Zelda.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [
-      applications: [:logger, :httpoison],
+      applications: [:logger, :httpoison, :sqlite_ecto, :ecto],
       mod:          {Zelda, []}
     ]
   end
@@ -32,7 +32,9 @@ defmodule Zelda.Mixfile do
   defp deps do
     [
       {:slacker, "~> 0.0.1"},
-      {:websocket_client, github: "jeremyong/websocket_client"}
+      {:websocket_client, github: "jeremyong/websocket_client"},
+      {:mock, "~> 0.1.1"},
+      {:sqlite_ecto, "~> 1.0.0"},
     ]
   end
 end

@@ -9,6 +9,7 @@ defmodule Zelda.Supervisor do
 
   def init(:ok) do
     children = [
+      worker(Zelda.Repo, []),
       worker(Zelda.Slack, [@api_token]),
       worker(Zelda.State, [:last_id]),
     ]
