@@ -6,6 +6,11 @@ defmodule Zelda.Slack do
   alias Zelda.Commands
   alias Zelda.State
 
+  # the start_link provided by slacker doesn't pass opts
+  def start_link(api_token, opts) do
+    GenServer.start_link(__MODULE__, api_token, opts)
+  end
+
   match ~r/\b(\w+:[\w-]+)\b/, :say_link
   match ~r/\b(\w+:")\s*/, :re_link
   match ~r/^zelda:\s*(\w+)\s*(.*)$/, :do_command
@@ -24,13 +29,10 @@ defmodule Zelda.Slack do
   end
 
   def do_command(slack, msg, command, args) do
-    {:ok, replies} = Commands.handle_cmd(
-      slack,
+    Commands.send_cmd(
       msg,
       String.downcase(command),
       String.split(args, ~r/\s+/, trim: true)
     )
-
-    replies |> Enum.each &say(slack, msg["channel"], &1)
   end
 end

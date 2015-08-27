@@ -1,17 +1,21 @@
 defmodule Zelda do
   use Application
 
-  @api_token Application.get_env(:zelda, :slack_token)
-
   def start(_type, _args) do
     import Supervisor.Spec
+
+    api_token = Application.get_env(:zelda, :slack_token)
 
     children = [
       worker(Zelda.Repo, []),
       worker(Zelda.State, [:last_id]),
-      worker(Zelda.Slack, [@api_token]),
+      worker(Zelda.Commands, []),
+      worker(Zelda.Slack, [api_token, [name: :slack]]),
     ]
 
-    children |> supervise(name: Zelda.Sup, strategy: :one_for_one)
+    children |> Supervisor.start_link(
+      name:     Zelda.Sup,
+      strategy: :one_for_one,
+    )
   end
 end

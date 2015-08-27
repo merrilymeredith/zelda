@@ -1,8 +1,9 @@
 defmodule ZeldaTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+
+  import Mock
 
   alias Zelda.Link
-  alias Zelda.Slack
   alias Zelda.Commands
   alias Zelda.Ignore
 
@@ -26,8 +27,10 @@ defmodule ZeldaTest do
 
 
   test "Commands.handle_cmd help" do
-    {:ok, [help_text | _]} = Commands.handle_cmd(nil, nil, "help", nil)
-    assert help_text |> String.starts_with? "Hi, I'm Zelda"
+    with_mock Zelda.Slack, [say: fn (_, _channel, _text) -> () end] do
+      {:noreply, _} = Commands.handle_cast({"help", [], %{"channel" => "mock"}}, [])
+      assert called Zelda.Slack.say( :slack, "mock", :_ )
+    end
   end
 
 

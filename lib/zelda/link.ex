@@ -1,4 +1,8 @@
 defmodule Zelda.Link do
+  def get_types do
+    "zr/zrgit, bb, bb_stg, bugzid, grafana, barkeep"
+  end
+
   # aliases
   def make_link({:zrgit, id}), do: make_link({:zr, id})
 
