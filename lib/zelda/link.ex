@@ -14,23 +14,27 @@ defmodule Zelda.Link do
       :bugzid  -> "https://ziprecruiter.fogbugz.com/f/cases/#{id}/"
       :grafana -> "https://stats.ziprecruiter.com/grafana/dashboard/db/#{id}"
       :barkeep -> "https://barkeep.ziprecruiter.com/commits/ziprecruiter/#{id}"
-      _ -> ()
+      _ -> nil
     end
   end
-  def make_link(_), do: ()
+  def make_link(_), do: nil
 
   def match_token(string) when is_binary(string) do
-    [_, type, id] = Regex.run(~r{\b([a-z]+):([\w-]+)\b}, string)
+    [_, type, id] = Regex.run(~r{\b([a-z_]+):([\w-]+)\b}, string)
     { String.to_existing_atom(type), id }
-  rescue _ -> ()
+  rescue _ -> nil
   end
-  def match_token(_), do: ()
+  def match_token(_), do: nil
 
   def get_link(string), do: string |> match_token |> make_link
 
   def get_link_detail(string) do
-    token = {type, id} = match_token string
-    link  = make_link(token)
-    {link, type, id}
+    token = match_token(string)
+    if link = make_link(token) do
+      {type, id} = token
+      {link, type, id}
+    else
+      nil
+    end
   end
 end

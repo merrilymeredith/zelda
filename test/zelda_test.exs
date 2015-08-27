@@ -25,6 +25,13 @@ defmodule ZeldaTest do
     assert Link.get_link(nil) == nil
   end
 
+  test "Link.get_link_detail" do
+    assert Link.get_link_detail("foo bugzid:54321") == {"https://ziprecruiter.fogbugz.com/f/cases/54321/", :bugzid, "54321"}
+    refute Link.get_link_detail("foo: blah")
+    refute Link.get_link_detail("baz:blah")
+    refute Link.get_link_detail(nil)
+  end
+
 
   test "Commands.handle_cmd help" do
     with_mock Zelda.Slack, [say: fn (_, _channel, _text) -> () end] do
