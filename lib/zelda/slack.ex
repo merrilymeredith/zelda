@@ -41,4 +41,10 @@ defmodule Zelda.Slack do
       String.split(args, ~r/\s+/, trim: true)
     )
   end
+
+
+  def handle_cast({:handle_incoming, "team_join", %{"user" => user}}, state) do
+    Zelda.Slack.Users.add_user user["id"], user["name"]
+    {:noreply, state}
+  end
 end

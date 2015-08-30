@@ -9,6 +9,7 @@ defmodule Zelda do
     children = [
       worker(Zelda.Repo, []),
       worker(Zelda.State, [:last_id]),
+      worker(Zelda.Slack.Users, []),
       worker(Zelda.Commands, []),
       worker(Zelda.Slack, [api_token, [name: :slack]]),
     ]
