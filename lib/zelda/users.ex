@@ -1,4 +1,4 @@
-defmodule Zelda.Slack.Users do
+defmodule Zelda.Users do
   use GenServer
 
   @api_token Application.get_env(:zelda, :slack_token)

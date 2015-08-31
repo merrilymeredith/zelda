@@ -1,7 +1,7 @@
 defmodule Zelda.Commands do
   use GenServer
   alias Zelda.Ignore
-  alias Zelda.Slack.Users
+  alias Zelda.Users
 
   @api_token Application.get_env(:zelda, :slack_token)
 
