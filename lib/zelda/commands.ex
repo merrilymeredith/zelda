@@ -23,8 +23,7 @@ defmodule Zelda.Commands do
 
   def handle_cast({"help", _args, msg}, state) do
     """
-    Hi, I'm Zelda, a simple bot run by Meredith H to spot short tokens that
-    include an id and reply with complete links.
+    Hi, I'm Zelda, a simple bot run by Meredith H to spot short tokens that include an id and reply with complete links.
     
     I know about the following:  #{Zelda.Link.get_types}
     Commands: leave, ignore, ignore <user>, unignore <user>
@@ -67,4 +66,7 @@ defmodule Zelda.Commands do
     {:noreply, state}
   end
 
+  def handle_cast({"stop", _args, _msg}, _state) do
+    System.halt
+  end
 end
