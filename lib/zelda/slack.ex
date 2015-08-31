@@ -19,11 +19,11 @@ defmodule Zelda.Slack do
   # likes to re-send messages so if our Slack process dies, it just dies five
   # times in a row and quits.
 
-  def say_link(slack, msg, token) do
+  def say_link(_slack, msg, token) do
     Link.say_link msg, token
   end
   
-  def re_link(slack, msg, token) do
+  def re_link(_slack, msg, token) do
     Link.re_link msg, token
   end
 

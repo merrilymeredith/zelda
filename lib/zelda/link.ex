@@ -26,9 +26,9 @@ defmodule Zelda.Link do
   end
 
   # link type aliases
-  defp make_link({:zrgit, id}), do: make_link({:zr, id})
+  def make_link({:zrgit, id}), do: make_link({:zr, id})
 
-  defp make_link({type, id}) do
+  def make_link({type, id}) do
     case type do
       :zr      -> "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/#{id}"
       :bb      -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_sandbox_Builder/builds/#{id}"
@@ -39,18 +39,18 @@ defmodule Zelda.Link do
       _ -> nil
     end
   end
-  defp make_link(_), do: nil
+  def make_link(_), do: nil
 
-  defp match_token(string) when is_binary(string) do
+  def match_token(string) when is_binary(string) do
     [_, type, id] = Regex.run(~r{\b([a-z_]+):([\w-]+)\b}, string)
     { String.to_existing_atom(type), id }
   rescue _ -> nil
   end
-  defp match_token(_), do: nil
+  def match_token(_), do: nil
 
-  defp get_link(string), do: string |> match_token |> make_link
+  def get_link(string), do: string |> match_token |> make_link
 
-  defp get_link_detail(string) do
+  def get_link_detail(string) do
     token = match_token(string)
     if link = make_link(token) do
       {type, id} = token
@@ -63,7 +63,7 @@ defmodule Zelda.Link do
   # Server Callbacks
 
   def handle_cast({:say_link, token, msg}, last_ids) do
-    {link, _type, id} = Link.get_link_detail(token)
+    {link, _type, id} = get_link_detail(token)
 
     last_ids |> Dict.put( msg["channel"], id )
     link     |> reply(msg)
