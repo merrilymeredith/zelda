@@ -1,29 +1,6 @@
 defmodule Zelda.Link do
   use GenServer
-
-  # Client
-
-  def start_link() do
-    GenServer.start_link(__MODULE__, HashDict.new, [name: :link])
-  end
-
-  def say_link(msg, token) do
-    GenServer.cast :link, {:say_link, token, msg}
-  end
-
-  def re_link(msg, token) do
-    GenServer.cast :link, {:re_link, token, msg}
-  end
-
-  def get_types do
-    "zr/zrgit, bb, bb_stg, bugzid, grafana, barkeep"
-  end
-
-  # Utility stuff
-
-  def reply(text, msg) do
-    Zelda.Slack.say( :slack, msg["channel"], text )
-  end
+  import Zelda.Ignore, only: [is_ignored?: 2]
 
   # link type aliases
   def make_link({:zrgit, id}), do: make_link({:zr, id})
@@ -60,13 +37,39 @@ defmodule Zelda.Link do
     end
   end
 
+  # Client
+
+  def start_link() do
+    GenServer.start_link(__MODULE__, HashDict.new, [name: :link])
+  end
+
+  def say_link(msg, token) do
+    GenServer.cast :link, {:say_link, token, msg}
+  end
+
+  def re_link(msg, token) do
+    GenServer.cast :link, {:re_link, token, msg}
+  end
+
+  def get_types do
+    "zr/zrgit, bb, bb_stg, bugzid, grafana, barkeep"
+  end
+
+  # Utility stuff
+
+  def reply(text, msg) do
+    Zelda.Slack.say( :slack, msg["channel"], text )
+  end
+
   # Server Callbacks
 
   def handle_cast({:say_link, token, msg}, last_ids) do
-    {link, _type, id} = get_link_detail(token)
+    if !is_ignored?(:slack_id, msg["user"]) do
+      {link, _type, id} = get_link_detail(token)
 
-    last_ids |> Dict.put( msg["channel"], id )
-    link     |> reply(msg)
+      last_ids = last_ids |> Dict.put( msg["channel"], id )
+      link |> reply(msg)
+    end
     {:noreply, last_ids}
   rescue _ in MatchError -> {:noreply, last_ids}
   end

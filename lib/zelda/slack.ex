@@ -15,10 +15,6 @@ defmodule Zelda.Slack do
   match ~r/\b([a-z_]+:!\$)/, :re_link
   match ~r/^zelda:\s*(\w+)\s*(.*)$/, :do_command
 
-  # TODO: link handling should maybe be its own process like commands, as Slack
-  # likes to re-send messages so if our Slack process dies, it just dies five
-  # times in a row and quits.
-
   def say_link(_slack, msg, token) do
     Link.say_link msg, token
   end
