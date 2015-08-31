@@ -65,8 +65,4 @@ defmodule Zelda.Commands do
     reply "No longer ignoring #{name}.", msg
     {:noreply, state}
   end
-
-  def handle_cast({"stop", _args, _msg}, _state) do
-    System.halt
-  end
 end
