@@ -4,7 +4,6 @@ defmodule Zelda.Slack do
 
   alias Zelda.Link
   alias Zelda.Commands
-  alias Zelda.State
 
   # the start_link provided by slacker doesn't pass opts, I want to register a
   # name for this process
@@ -21,17 +20,11 @@ defmodule Zelda.Slack do
   # times in a row and quits.
 
   def say_link(slack, msg, token) do
-    {link, _type, id} = Link.get_link_detail(token)
-
-    State.set(:last_id, msg["channel"], id)
-    say slack, msg["channel"], link
-  rescue _ in MatchError -> ()
+    Link.say_link msg, token
   end
   
   def re_link(slack, msg, token) do
-    last_id = State.get(:last_id, msg["channel"])
-    say_link slack, msg, String.replace(token, ~s[!$], last_id)
-  rescue _ in MatchError -> ()
+    Link.re_link msg, token
   end
 
   def do_command(_slack, msg, command, args) do
@@ -41,7 +34,6 @@ defmodule Zelda.Slack do
       String.split(args, ~r/\s+/, trim: true)
     )
   end
-
 
   def handle_cast({:handle_incoming, "team_join", %{"user" => user}}, state) do
     Zelda.Slack.Users.add_user user["id"], user["name"]
