@@ -41,7 +41,7 @@ defmodule Zelda.Commands do
 
   # FIXME: user is a user id, i need the name too
   # and for ignore-someone-else i need the id from the name
-  def handle_cast({"ignore", [], msg}, state) do
+  def handle_cast({"ignore", [""], msg}, state) do
     id = msg["user"]
     name = Users.lookup_by(:id, id)
     Ignore.ignore( id, name )
