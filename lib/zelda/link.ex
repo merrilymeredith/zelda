@@ -5,25 +5,26 @@ defmodule Zelda.Link do
   @match Application.get_env(:zelda, :match)[:link]
 
   # link type aliases
-  def make_link({:zrgit, id}), do: make_link({:zr, id})
+  def make_link({"zrgit", id}), do: make_link({"zr", id})
 
   def make_link({type, id}) do
     case type do
-      :zr      -> "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/#{id}"
-      :bb      -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_sandbox_Builder/builds/#{id}"
-      :bb_stg  -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_stg_Builder/builds/#{id}"
-      :bugzid  -> "https://ziprecruiter.fogbugz.com/f/cases/#{id}/"
-      :grafana -> "https://stats.ziprecruiter.com/grafana/dashboard/db/#{id}"
-      :barkeep -> "https://barkeep.ziprecruiter.com/commits/ziprecruiter/#{id}"
+      "zr"      -> "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/#{id}"
+      "bb"      -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_sandbox_Builder/builds/#{id}"
+      "bb_stg"  -> "https://buildbot.ziprecruiter.com/builders/buildbot-01_stg_Builder/builds/#{id}"
+      "bugzid"  -> "https://ziprecruiter.fogbugz.com/f/cases/#{id}/"
+      "grafana" -> "https://stats.ziprecruiter.com/grafana/dashboard/db/#{id}"
+      "barkeep" -> "https://barkeep.ziprecruiter.com/commits/ziprecruiter/#{id}"
       _ -> nil
     end
   end
   def make_link(_), do: nil
 
   def match_token(string) when is_binary(string) do
-    [_, _, type, id] = Regex.run(@match, string)
-    { String.to_existing_atom(type), id }
-  rescue _ -> nil
+    case Regex.run(@match, string) do
+      [_, _, type, id] -> { type, id }
+      _ -> nil
+    end
   end
   def match_token(_), do: nil
 

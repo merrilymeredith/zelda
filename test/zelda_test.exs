@@ -8,14 +8,15 @@ defmodule ZeldaTest do
   alias Zelda.Ignore
 
   test "Link.match_token" do
-    assert Link.match_token("foo zr:bac321 baz") == {:zr, "bac321"}
+    assert Link.match_token("foo zr:bac321 baz")    == {"zr", "bac321"}
+    assert Link.match_token("foo z_r:bac-321 baz") == {"z_r", "bac-321"}
   end
 
   test "Link.make_link" do
     assert Link.make_link("") == nil
-    assert Link.make_link({:zr, "123cab"})              == "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/123cab"
-    assert Link.make_link({:bugzid, "12345"})           == "https://ziprecruiter.fogbugz.com/f/cases/12345/"
-    assert Link.make_link({:grafana, "blah-dashboard"}) == "https://stats.ziprecruiter.com/grafana/dashboard/db/blah-dashboard"
+    assert Link.make_link({"zr", "123cab"})              == "https://git.ziprecruiter.com/ZipRecruiter/ziprecruiter/commit/123cab"
+    assert Link.make_link({"bugzid", "12345"})           == "https://ziprecruiter.fogbugz.com/f/cases/12345/"
+    assert Link.make_link({"grafana", "blah-dashboard"}) == "https://stats.ziprecruiter.com/grafana/dashboard/db/blah-dashboard"
   end
 
   test "Link.get_link" do
@@ -26,7 +27,7 @@ defmodule ZeldaTest do
   end
 
   test "Link.get_link_detail" do
-    assert Link.get_link_detail("foo bugzid:54321") == {"https://ziprecruiter.fogbugz.com/f/cases/54321/", :bugzid, "54321"}
+    assert Link.get_link_detail("foo bugzid:54321") == {"https://ziprecruiter.fogbugz.com/f/cases/54321/", "bugzid", "54321"}
     refute Link.get_link_detail("foo: blah")
     refute Link.get_link_detail("baz:blah")
     refute Link.get_link_detail(nil)
