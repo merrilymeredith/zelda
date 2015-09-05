@@ -5,17 +5,19 @@ defmodule Zelda.Slack do
   alias Zelda.Link
   alias Zelda.Commands
 
+  @matches Application.get_env(:zelda, :match)
+
   # the start_link provided by slacker doesn't pass opts, I want to register a
   # name for this process
   def start_link(api_token, opts) do
     GenServer.start_link(__MODULE__, api_token, opts)
   end
 
-  match ~r/\b([a-z_]+:[\w-]+)\b/, :say_link
-  match ~r/\b([a-z_]+:!\$)/, :re_link
-  match ~r/^zelda:\s*(\w+)\s*(.*)$/, :do_command
+  match @matches[:link],    :say_link
+  match @matches[:repeat],  :re_link
+  match @matches[:command], :do_command
 
-  def say_link(_slack, msg, token) do
+  def say_link(_slack, msg, token, _, _) do
     Link.say_link msg, token
   end
   

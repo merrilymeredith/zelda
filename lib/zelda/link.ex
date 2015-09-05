@@ -2,6 +2,8 @@ defmodule Zelda.Link do
   use GenServer
   import Zelda.Ignore, only: [is_ignored?: 2]
 
+  @match Application.get_env(:zelda, :match)[:link]
+
   # link type aliases
   def make_link({:zrgit, id}), do: make_link({:zr, id})
 
@@ -19,7 +21,7 @@ defmodule Zelda.Link do
   def make_link(_), do: nil
 
   def match_token(string) when is_binary(string) do
-    [_, type, id] = Regex.run(~r{\b([a-z_]+):([\w-]+)\b}, string)
+    [_, _, type, id] = Regex.run(@match, string)
     { String.to_existing_atom(type), id }
   rescue _ -> nil
   end

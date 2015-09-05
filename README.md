@@ -14,11 +14,14 @@ You can set the environment `$SLACK_API_TOKEN`
 TODO
 ----
 
-- There should be an ignore $user command so people can opt out
+x There should be an ignore $user command so people can opt out
 - Should also just ignore users that are marked as bots, I think
-- The simple interface provided by Slacker doesn't easily expose a way to look
+~ The simple interface provided by Slacker doesn't easily expose a way to look
   up user and channel names from their IDs
-- Ignores should persist, and unignore should work too.
+  x user name-id map
+x Ignores should persist, and unignore should work too.
 - If a message handler in the Slack process crashes it, slack replays the message every restart
+  x made link happen in a different process, which sortof avoids this
+- documentation
 
 
