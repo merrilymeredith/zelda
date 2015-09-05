@@ -39,7 +39,9 @@ x Ignores should persist, and unignore should work too.
 - If a message handler in the Slack process crashes it, slack replays the message every restart
   x made link happen in a different process, which sortof avoids this
 - documentation
-- tests, how to make interconnected bits easier to test
+- more tests
+  - how to make interconnected bits easier to test
+  - probably a better practice for ecto tests
 
 
 LICENSE
