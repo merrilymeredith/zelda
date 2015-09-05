@@ -3,3 +3,5 @@
 erl_crash.dump
 *.ez
 zelda-*.sqlite
+
+config/link_config.exs
