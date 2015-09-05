@@ -6,7 +6,7 @@ primary purpose is to catch things like "blah:123abc6" and reply back with
 complete links to the appropriate service.
 
 Before it will work, it needs a slack API token to be set in its configuration.
-You can set the environment `$SLACK_API_TOKEN`
+You can set the environment `SLACK_API_TOKEN`
 
     $ mix deps.get
     $ mix run
@@ -26,6 +26,8 @@ of editing `config.exs` itself, create `config/link_config.exs` like so:
 
 These keys will then be merged with the default config.
 
+Currently, you need to run `MIX_ENV=test mix ecto.migrate` once before trying
+`mix test`.
 
 TODO
 ----
