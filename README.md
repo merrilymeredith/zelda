@@ -52,6 +52,8 @@ both trying to get some best-practices down and figuring out some of my own.
 - more tests
   - how to make interconnected bits easier to test
   - probably a better practice for ecto tests
+- Slacker doesn't seem to cover "match my own name" right now, so public commands
+  are hard-coded to match `/^zelda:/` to get the bot's attention, no matter what name.
 
 
 LICENSE
