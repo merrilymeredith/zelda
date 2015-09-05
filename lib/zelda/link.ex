@@ -48,7 +48,11 @@ defmodule Zelda.Link do
   end
 
   def get_types do
-    "zr/zrgit, bb, bb_stg, bugzid, grafana, barkeep"
+    @templates ++ @aliases
+      |> Keyword.keys
+      |> Enum.sort
+      |> Enum.map(&Atom.to_string(&1))
+      |> Enum.join(", ")
   end
 
   # Utility stuff

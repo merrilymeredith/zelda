@@ -23,9 +23,9 @@ defmodule Zelda.Commands do
 
   def handle_cast({"help", _args, msg}, state) do
     """
-    Hi, I'm Zelda, a simple bot run by Meredith H to spot short tokens that include an id and reply with complete links.
+    Hi, I'm Zelda, an Elixir bot that listens for short references and replies with a helpful Link!
     
-    I know about the following:  #{Zelda.Link.get_types}
+    Link Types:  #{Zelda.Link.get_types}
     Commands: leave, ignore, ignore <user>, unignore <user>
     """ |> reply(msg)
 
