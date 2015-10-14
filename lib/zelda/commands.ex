@@ -2,6 +2,7 @@ defmodule Zelda.Commands do
   use GenServer
   alias Zelda.Ignore
   alias Zelda.Users
+  alias Zelda.Slack
 
   @api_token Application.get_env(:zelda, :slack_token)
 
@@ -11,56 +12,60 @@ defmodule Zelda.Commands do
     GenServer.start_link(__MODULE__, [], [name: :commands])
   end
 
-  def send_cmd(msg, command, args) do
-    GenServer.cast :commands, {command, args, msg}
+  def send_cmd(slack, msg, command, args) do
+    GenServer.cast :commands, {command, args, slack, msg}
   end
 
-  def reply(text, msg) do
-    Zelda.Slack.say( :slack, msg["channel"], text )
+  def do_command(slack, msg, command, args) do
+    Commands.send_cmd(
+      slack, msg,
+      String.downcase(command),
+      String.split(args, ~r/\s+/, trim: true)
+    )
   end
 
   # Server Callbacks
 
-  def handle_cast({"help", _args, msg}, state) do
+  def handle_cast({"help", _args, slack, msg}, state) do
     """
     Hi, I'm Zelda, an Elixir bot that listens for short references and replies with a helpful Link!
     
     Link Types:  #{Zelda.Link.get_types}
     Commands: leave, ignore, ignore <user>, unignore <user>
-    """ |> reply(msg)
+    """ |> Slack.reply(slack, msg)
 
     {:noreply, state}
   end
   
-  def handle_cast({"leave", _args, msg}, state) do
+  def handle_cast({"leave", _args, _slack, msg}, state) do
     Slacker.Web.channels_leave(@api_token, channel: msg["channel"])
 
     {:noreply, state}
   end
 
-  def handle_cast({"ignore", [""], msg}, state) do
+  def handle_cast({"ignore", [""], slack, msg}, state) do
     id = msg["user"]
     name = Users.lookup_by(:id, id)
     Ignore.ignore( id, name )
 
-    reply("Ignoring #{name}.", msg)
+    Slack.reply "Ignoring #{name}.", slack, msg
     {:noreply, state}
   end
 
-  def handle_cast({"ignore", [name | _args], msg}, state) do
+  def handle_cast({"ignore", [name | _args], slack, msg}, state) do
     case Users.lookup_by(:name, name) do
       nil ->
-        reply "I don't know a #{name}!", msg
+        Slack.reply "I don't know a #{name}!", slack, msg
       id ->
         Ignore.ignore id, name
-        reply "Ignoring #{name}.", msg
+        Slack.reply "Ignoring #{name}.", slack, msg
     end
     {:noreply, state}
   end
 
-  def handle_cast({"unignore", [name | _args], msg}, state) do
+  def handle_cast({"unignore", [name | _args], slack, msg}, state) do
     Ignore.unignore :slack_name, name
-    reply "No longer ignoring #{name}.", msg
+    Slack.reply "No longer ignoring #{name}.", slack, msg
     {:noreply, state}
   end
 end
