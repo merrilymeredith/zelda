@@ -44,10 +44,11 @@ both trying to get some best-practices down and figuring out some of my own.
 - Should also just ignore users that are marked as bots, I think
 - documentation
 - more tests
-  - probably a better practice for ecto tests
+  - probably a better practice for ecto tests?
 - Slacker doesn't seem to cover "match my own name" right now, so public commands
   are hard-coded to match `/^zelda:/` to get the bot's attention, no matter what name.
-
+- Could use a better way to plug local customizations in w/o changing git-tracked files
+ - really, make a library of this and/or submit some PRs to Slacker
 
 LICENSE
 -------
