@@ -33,7 +33,6 @@ defmodule Zelda.Mixfile do
     [
       {:slacker, "~> 0.0.1"},
       {:websocket_client, github: "jeremyong/websocket_client"},
-      {:mock, "~> 0.1.1"},
       {:sqlite_ecto, "~> 1.0.0"},
     ]
   end
