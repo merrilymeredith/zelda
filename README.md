@@ -31,26 +31,19 @@ of editing `config.exs` itself, create `config/link_config.exs` like so:
 
 These keys will then be merged with the default config.
 
-Currently, you need to run `MIX_ENV=test mix ecto.migrate` once before trying
-`mix test`.
-
 TODO
 ----
 
 This is my first Elixir project beyond small scripts and other toys, so I'm
 both trying to get some best-practices down and figuring out some of my own.
 
+- ✓ user name-id map
 - ✓ There should be an ignore $user command so people can opt out
-- Should also just ignore users that are marked as bots, I think
-- The simple interface provided by Slacker doesn't easily expose a way to look
-  up user and channel names from their IDs
-  - ✓ user name-id map
 - ✓ Ignores should persist, and unignore should work too.
-- If a message handler in the Slack process crashes it, slack replays the message every restart
-  - ✓ made link happen in a different process, which sortof avoids this
+- ✓ use pid arguments instead of global process names so bits can be tested w/o mocking
+- Should also just ignore users that are marked as bots, I think
 - documentation
 - more tests
-  - how to make interconnected bits easier to test
   - probably a better practice for ecto tests
 - Slacker doesn't seem to cover "match my own name" right now, so public commands
   are hard-coded to match `/^zelda:/` to get the bot's attention, no matter what name.
