@@ -17,8 +17,7 @@ defmodule Zelda.Commands do
   end
 
   def do_command(slack, msg, command, args) do
-    Commands.send_cmd(
-      slack, msg,
+    send_cmd(slack, msg,
       String.downcase(command),
       String.split(args, ~r/\s+/, trim: true)
     )
