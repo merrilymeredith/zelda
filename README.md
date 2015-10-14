@@ -14,6 +14,7 @@ Before it will work, it needs a slack API token to be set in its configuration.
 You can set the environment `SLACK_API_TOKEN`
 
     $ mix deps.get
+    $ mix ecto.migrate
     $ mix run
 
 Only one default link type is enabled, github.  In my case, we have a pile but
