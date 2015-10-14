@@ -8,11 +8,16 @@ defmodule Zelda do
 
     children = [
       worker(Zelda.Repo, []),
-      worker(Zelda.Users, []),
       worker(Zelda.Commands, []),
       worker(Zelda.Link, []),
-      worker(Zelda.Slack, [api_token, [name: :slack]]),
     ]
+
+    if Mix.env != :test do
+      children = children ++ [
+        worker(Zelda.Slack, [api_token]),
+        worker(Zelda.Users, []),
+      ]
+    end
 
     children |> Supervisor.start_link(
       name:     Zelda.Sup,
