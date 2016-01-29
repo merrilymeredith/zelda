@@ -21,7 +21,12 @@ config :zelda,
   slack_token: System.get_env("SLACK_API_TOKEN")
 
 config :zelda, Zelda.Repo,
-  adapter:  Sqlite.Ecto,
-  database: "zelda-#{Mix.env}.sqlite"
+  adapter:  Sqlite.Ecto
+
+if Mix.env == :test do
+  config :zelda, Zelda.Repo, database: ":memory:"
+else
+  config :zelda, Zelda.Repo, database: "zelda-#{Mix.env}.sqlite"
+end
 
 # import_config "#{Mix.env}.exs"
