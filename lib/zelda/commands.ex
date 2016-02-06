@@ -10,8 +10,6 @@ defmodule Zelda.Commands do
   alias Zelda.Users
   alias Zelda.Slack
 
-  @api_token Application.get_env(:zelda, :slack_token)
-
   # Client
 
   def start_link() do
@@ -43,7 +41,7 @@ defmodule Zelda.Commands do
   end
 
   def handle_cast({"leave", _args, _slack, msg}, state) do
-    Slacker.Web.channels_leave(@api_token, channel: msg["channel"])
+    Slacker.Web.channels_leave(Zelda.slack_token, channel: msg["channel"])
 
     {:noreply, state}
   end

@@ -7,8 +7,6 @@ defmodule Zelda.Users do
 
   use GenServer
 
-  @api_token Application.get_env(:zelda, :slack_token)
-
   # Client
 
   def start_link() do
@@ -16,7 +14,7 @@ defmodule Zelda.Users do
   end
 
   def list_users do
-    {:ok, %{members: members}} = Slacker.Web.users_list(@api_token)
+    {:ok, %{members: members}} = Slacker.Web.users_list(Zelda.slack_token)
     members
       |> Enum.map( fn (user) -> {user["id"], user["name"]} end )
       |> Enum.into( HashDict.new )

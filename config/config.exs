@@ -23,8 +23,8 @@ config :zelda, :match,
   command: ~r/^zelda:\s*(\w+)\s*(.*)$/
 
 
-config :zelda,
-  slack_token: System.get_env("SLACK_API_TOKEN")
+# config :zelda,
+#   slack_token: "a slack token"
 
 config :zelda, Zelda.Repo,
   adapter:  Sqlite.Ecto
@@ -35,4 +35,6 @@ else
   config :zelda, Zelda.Repo, database: "zelda-#{Mix.env}.sqlite"
 end
 
-# import_config "#{Mix.env}.exs"
+if File.exists? "#{Mix.env}.exs" do
+  import_config "#{Mix.env}.exs"
+end

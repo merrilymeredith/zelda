@@ -10,8 +10,6 @@ defmodule Zelda do
   def start(_type, _args) do
     import Supervisor.Spec
 
-    api_token = Application.get_env(:zelda, :slack_token)
-
     children = [
       worker(Zelda.Repo, []),
       worker(Zelda.Commands, []),
@@ -20,7 +18,7 @@ defmodule Zelda do
 
     if Mix.env != :test do
       children = children ++ [
-        worker(Zelda.Slack, [api_token]),
+        worker(Zelda.Slack, [slack_token]),
         worker(Zelda.Users, []),
       ]
     end
@@ -29,5 +27,11 @@ defmodule Zelda do
       name:     Zelda.Sup,
       strategy: :one_for_one,
     )
+  end
+
+  def slack_token do
+    System.get_env("SLACK_API_TOKEN") ||
+    Application.get_env(:zelda, :slack_token) ||
+    raise RuntimeError, message: "No Slack API Token configured"
   end
 end
