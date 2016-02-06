@@ -24,7 +24,7 @@ defmodule Zelda.Link do
     type = @aliases[type] || type
     case @templates[type] do
       nil  -> {:error, "No Template"}
-      tmpl -> {:ok, {EEx.eval_string(tmpl, assigns: [id: id]), type, id}}
+      tmpl -> {:ok, {EEx.eval_string(tmpl, assigns: [id: URI.encode(id)]), type, id}}
     end
   end
 
@@ -38,8 +38,8 @@ defmodule Zelda.Link do
   def match_token(nil), do: {:error, "No Match"}
   def match_token(string) do
     case Regex.run(@match, string) do
-      [_, _, type, id] -> {:ok, {String.to_existing_atom(type), id}}
-      nil              -> {:error, "No Match"}
+      [_, _, type, id]    -> {:ok, {String.to_existing_atom(type), String.strip(id, ?")}}
+      nil                 -> {:error, "No Match"}
     end
   rescue ArgumentError -> {:error, "No Template"}
   end
