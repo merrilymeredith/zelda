@@ -18,7 +18,7 @@ end
 
 
 config :zelda, :match,
-  link:    ~r/\b(([a-z_]+):([\w-\/]+|"[^"]+"))/,
+  link:    ~r/\b(([a-z_]+):([\w-\/]+|<[^>]+>))/,
   repeat:  ~r/\b([a-z_]+:!\$)/,
   command: ~r/^zelda:\s*(\w+)\s*(.*)$/
 

@@ -38,8 +38,9 @@ defmodule Zelda.Link do
   def match_token(nil), do: {:error, "No Match"}
   def match_token(string) do
     case Regex.run(@match, string) do
-      [_, _, type, id]    -> {:ok, {String.to_existing_atom(type), String.strip(id, ?")}}
-      nil                 -> {:error, "No Match"}
+      [_, _, type, id] ->
+        {:ok, {String.to_existing_atom(type), id |> String.lstrip(?<) |> String.rstrip(?>)}}
+      nil              -> {:error, "No Match"}
     end
   rescue ArgumentError -> {:error, "No Template"}
   end

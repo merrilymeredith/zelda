@@ -7,7 +7,7 @@ defmodule ZeldaTest do
 
   test "Link.match_token" do
     assert Link.match_token("foo gh:bac321 baz")    == {:ok, {:gh, "bac321"}}
-    assert Link.match_token("foo gh:\"blah \" baz") == {:ok, {:gh, "blah "}}
+    assert Link.match_token("foo gh:<blah > baz") == {:ok, {:gh, "blah "}}
   end
 
   test "Link.make_link" do
@@ -19,7 +19,7 @@ defmodule ZeldaTest do
 
   test "Link.get_link" do
     assert Link.get_link("foo github:54321")   == "https://github.com/54321"
-    assert Link.get_link(~s[github:"foo baz"]) == "https://github.com/foo%20baz"
+    assert Link.get_link("github:<foo baz>") == "https://github.com/foo%20baz"
     assert Link.get_link("foo: blah") == nil
     assert Link.get_link("baz:blah")  == nil
     assert Link.get_link(nil)         == nil
