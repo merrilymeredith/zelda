@@ -1,10 +1,16 @@
 use Mix.Config
 
 config :zelda, :link_aliases,
-  github:  :gh
+  github:     :gh,
+  bitbucket:  :bb,
+  google:     :gg,
+  duckduckgo: :ddg
 
 config :zelda, :link_templates,
-  gh:      "https://github.com/<%= @id %>"
+  gh:  "https://github.com/<%= @id %>",
+  bb:  "https://bitbucket.org/<%= @id %>",
+  gg:  "https://google.com/?q=<%= @id %>",
+  ddg: "https://duckduckgo.com/?q=<%= @id %>"
 
 if File.exists? "config/link_config.exs" do
   import_config "link_config.exs"
