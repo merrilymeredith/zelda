@@ -1,4 +1,9 @@
 defmodule Zelda.Ignore do
+
+  @moduledoc """
+  Implements ignore (ignore messages from this user) tests and storage.
+  """
+
   alias Zelda.Repo
   alias Zelda.Model.Ignore
 
@@ -14,7 +19,9 @@ defmodule Zelda.Ignore do
   end
 
   def unignore(type, value) do
-    Repo.get_by(Ignore, [{type, value}])
-     |> Repo.delete!
+    case Repo.get_by(Ignore, [{type, value}]) do
+      nil -> nil
+      rec -> Repo.delete(rec)
+    end
   end
 end

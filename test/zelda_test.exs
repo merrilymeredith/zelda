@@ -10,26 +10,24 @@ defmodule ZeldaTest do
   end
 
   test "Link.make_link" do
-    assert Link.make_link({:error, "blah"}) ==
-      {:error, "blah"}
-    assert Link.make_link({:ok, {:gh,     "123cab/proj"}}) ==
+    assert Link.make_link({:gh,     "123cab/proj"}) ==
       {:ok, {"https://github.com/123cab/proj", :gh, "123cab/proj"}}
-    assert Link.make_link({:ok, {:github, "123cab/proj"}}) ==
+    assert Link.make_link({:github, "123cab/proj"}) ==
       {:ok, {"https://github.com/123cab/proj", :gh, "123cab/proj"}}
   end
 
   test "Link.get_link" do
     assert Link.get_link("foo github:54321") == "https://github.com/54321"
     assert Link.get_link("foo: blah") == nil
-    assert Link.get_link("baz:blah") == nil
-    assert Link.get_link(nil) == nil
+    assert Link.get_link("baz:blah")  == nil
+    assert Link.get_link(nil)         == nil
   end
 
   test "Link.get_link_detail" do
     assert Link.get_link_detail("foo github:54321") == {"https://github.com/54321", :gh, "54321"}
-    refute Link.get_link_detail("foo: blah")
-    refute Link.get_link_detail("baz:blah")
-    refute Link.get_link_detail(nil)
+    assert Link.get_link_detail("foo: blah") == {:error, "No Match"}
+    assert Link.get_link_detail("baz:blah")  == {:error, "No Template"}
+    assert Link.get_link_detail(nil)         == {:error, "No Match"}
   end
 
 

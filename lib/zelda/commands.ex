@@ -1,4 +1,10 @@
 defmodule Zelda.Commands do
+
+  @moduledoc """
+  The Command server for Zelda, handling commands sent by slack users and
+  sometimes dispatching them to other processes.
+  """
+
   use GenServer
   alias Zelda.Ignore
   alias Zelda.Users
@@ -28,14 +34,14 @@ defmodule Zelda.Commands do
   def handle_cast({"help", _args, slack, msg}, state) do
     """
     Hi, I'm Zelda, an Elixir bot that listens for short references and replies with a helpful Link!
-    
+
     Link Types:  #{Zelda.Link.get_types}
     Commands: leave, ignore, ignore <user>, unignore <user>
     """ |> Slack.reply(slack, msg)
 
     {:noreply, state}
   end
-  
+
   def handle_cast({"leave", _args, _slack, msg}, state) do
     Slacker.Web.channels_leave(@api_token, channel: msg["channel"])
 

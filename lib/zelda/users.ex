@@ -1,4 +1,10 @@
 defmodule Zelda.Users do
+
+  @moduledoc """
+  Maintains an in-memory list of users in the Slack team along with their IDs,
+  for quick lookup.
+  """
+
   use GenServer
 
   @api_token Application.get_env(:zelda, :slack_token)

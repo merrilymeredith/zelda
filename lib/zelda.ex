@@ -1,4 +1,10 @@
 defmodule Zelda do
+
+  @moduledoc """
+  Zelda, a simple Slack bot that listens for "type:id" tokens in chat and
+  replies with helpful links to the object that's been referenced.
+  """
+
   use Application
 
   def start(_type, _args) do

@@ -1,4 +1,12 @@
 defmodule Zelda.Slack do
+
+  @moduledoc """
+  Handles the ongoing Slack RTM API connection by way of the Slacker library.
+  Matches link tokens, which are dispatched to Zelda.Link, and commands, which
+  are dispatched to Zelda.Commands.  User join events are forwarded to
+  Zelda.Users.
+  """
+
   use Slacker
   use Slacker.Matcher
 

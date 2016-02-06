@@ -1,4 +1,10 @@
 defmodule Zelda.Link do
+
+  @moduledoc """
+  Implements a GenServer client/server interface and utility functions for
+  matching link tokens and responding to a slack process with complete links.
+  """
+
   use GenServer
   alias Zelda.Slack
   alias Zelda.Ignore
@@ -14,16 +20,13 @@ defmodule Zelda.Link do
         iex> Zelda.Link.make_link({:ok, {:github, "123cab"}})
         {:ok, {"https://github.com/123cab", "github", "123cab"}}
   """
-  def make_link({:ok, {type, id}}) do
+  def make_link({type, id}) do
     type = @aliases[type] || type
-    cond do
-      tmpl = @templates[type] ->
-        {:ok, {EEx.eval_string(tmpl, assigns: [id: id]), type, id}}
-      false ->
-        {:error, "No Template"}
+    case @templates[type] do
+      nil  -> {:error, "No Template"}
+      tmpl -> {:ok, {EEx.eval_string(tmpl, assigns: [id: id]), type, id}}
     end
   end
-  def make_link(e = {:error, _}), do: e
 
   @doc ~s"""
     Searches a given string for a "link token" and returns a tuple of
@@ -32,14 +35,14 @@ defmodule Zelda.Link do
         iex> Zelda.Link.match_token("foo gh:bac321 baz")
         {:ok, {:gh, "bac321"}}
   """
-  def match_token(string) when is_binary(string) do
+  def match_token(nil), do: {:error, "No Match"}
+  def match_token(string) do
     case Regex.run(@match, string) do
       [_, _, type, id] -> {:ok, {String.to_existing_atom(type), id}}
       nil              -> {:error, "No Match"}
     end
   rescue ArgumentError -> {:error, "No Template"}
   end
-  def match_token(_), do: {:error, "No Match"}
 
   @doc ~s"""
     Given a string to search, returns a tuple `{link, type, id}` for the first
@@ -49,11 +52,9 @@ defmodule Zelda.Link do
         {"https://github.com/bac321", :github, "bac321"}
   """
   def get_link_detail(string) do
-    result = string |> match_token |> make_link
-    case result do
-      {:ok, detail} -> detail
-      {:error, _} -> nil
-    end
+    with {:ok, token}  <- match_token(string),
+         {:ok, detail} <- make_link(token),
+      do: detail
   end
 
   @doc ~s"""
@@ -65,7 +66,7 @@ defmodule Zelda.Link do
   def get_link(string) do
     case get_link_detail(string) do
       {link, _, _} -> link
-      nil -> nil
+      _            -> nil
     end
   end
 
@@ -84,7 +85,8 @@ defmodule Zelda.Link do
   end
 
   def get_types do
-    @templates ++ @aliases
+    @templates
+      |> Keyword.merge(@aliases)
       |> Keyword.keys
       |> Enum.sort
       |> Enum.map(&Atom.to_string(&1))
@@ -97,7 +99,7 @@ defmodule Zelda.Link do
     if not Ignore.is_ignored?(:slack_id, msg["user"]) do
       {link, _type, id} = get_link_detail(token)
 
-      last_ids = last_ids |> Dict.put( msg["channel"], id )
+      last_ids = last_ids |> Dict.put(msg["channel"], id)
       link |> Slack.reply(slack, msg)
     end
     {:noreply, last_ids}
@@ -105,7 +107,7 @@ defmodule Zelda.Link do
   end
 
   def handle_cast({:re_link, slack, token, msg}, last_ids) do
-    last_id = Dict.fetch!( last_ids, msg["channel"] )
+    last_id = Dict.fetch!(last_ids, msg["channel"])
     handle_cast {:say_link, token |> String.replace(~s[!$], last_id), slack, msg}, last_ids
   rescue _ in KeyError -> {:noreply, last_ids}
   end
