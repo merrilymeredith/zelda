@@ -7,6 +7,9 @@ defmodule Zelda.Slack do
   Zelda.Users.
   """
 
+  # Step ahead of Slacker.Matcher to always ignore bot messages
+  def handle_cast({:handle_incoming, "message", %{"subtype" => "bot_message"}, state}), do: {:noreply, state}
+
   use Slacker
   use Slacker.Matcher
 
