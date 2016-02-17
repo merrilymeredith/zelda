@@ -34,19 +34,13 @@ defmodule Zelda.Commands do
     Hi, I'm Zelda, an Elixir bot that listens for short references and replies with a helpful Link!
 
     Link Types:  #{Zelda.Link.get_types}
-    Commands: leave, ignore, ignore <user>, unignore <user>
+    Commands: ignore, ignore <user>, unignore <user>
     """ |> Slack.reply(slack, msg)
 
     {:noreply, state}
   end
 
-  def handle_cast({"leave", _args, _slack, msg}, state) do
-    Slacker.Web.channels_leave(Zelda.slack_token, channel: msg["channel"])
-
-    {:noreply, state}
-  end
-
-  def handle_cast({"ignore", [""], slack, msg}, state) do
+  def handle_cast({"ignore", [], slack, msg}, state) do
     id = msg["user"]
     name = Users.lookup_by(:id, id)
     Ignore.ignore( id, name )
@@ -63,6 +57,12 @@ defmodule Zelda.Commands do
         Ignore.ignore id, name
         Slack.reply "Ignoring #{name}.", slack, msg
     end
+    {:noreply, state}
+  end
+
+  def handle_cast({"unignore", [], slack, msg}, state) do
+    Ignore.unignore :slack_id, msg["user"]
+    Slack.reply "No longer ignoring #{Users.lookup_by(:id, msg["user"])}.", slack, msg
     {:noreply, state}
   end
 
