@@ -31,8 +31,10 @@ config :zelda, Zelda.Repo,
 
 if Mix.env == :test do
   config :zelda, Zelda.Repo, database: ":memory:"
+  config :zelda, :connect_slack, false
 else
   config :zelda, Zelda.Repo, database: "zelda-#{Mix.env}.sqlite"
+  config :zelda, :connect_slack, true
 end
 
 if File.exists? "#{Mix.env}.exs" do

@@ -16,7 +16,7 @@ defmodule Zelda do
       worker(Zelda.Link, []),
     ]
 
-    if Mix.env != :test do
+    if Application.get_env(:zelda, :connect_slack) do
       children = children ++ [
         worker(Zelda.Slack, [slack_token]),
         worker(Zelda.Users, []),
