@@ -15,8 +15,15 @@ defmodule Zelda.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [
-      applications: [:logger, :httpoison, :slacker, :sqlitex, :sqlite_ecto, :ecto, :inflex, :websocket_client],
-      mod:          {Zelda, []}
+      mod:          {Zelda, []},
+      applications: [
+        :logger,
+        :httpoison, :slacker,
+        :sqlitex,
+        :sqlite_ecto, :ecto,
+        :inflex,
+        :websocket_client
+      ]
     ]
   end
 
