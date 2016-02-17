@@ -19,9 +19,9 @@ defmodule Zelda.Mixfile do
       applications: [
         :logger,
         :httpoison, :slacker,
-        :sqlitex,
+        :sqlitex, :esqlite,
         :sqlite_ecto, :ecto,
-        :inflex,
+        :inflex, :eex,
         :websocket_client
       ]
     ]
