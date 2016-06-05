@@ -22,19 +22,20 @@ config :zelda, :match,
   repeat:  ~r/\b([a-z_]+:!\$)/,
   command: ~r/^zelda:\s*(\w+)\s*(.*)$/
 
-
 # config :zelda,
 #   slack_token: "a slack token"
 
 config :zelda, Zelda.Repo,
-  adapter:  Sqlite.Ecto
+  adapter: Sqlite.Ecto
 
-if Mix.env == :test do
-  config :zelda, Zelda.Repo, database: ":memory:"
-  config :zelda, :connect_slack, false
-else
+if Mix.env == :prod do
   config :zelda, Zelda.Repo, database: "zelda-#{Mix.env}.sqlite"
-  config :zelda, :connect_slack, true
+  config :zelda, :users_module, Zelda.Users.Slack
+  config :zelda, :slack_module, Zelda.Slack.Live
+else
+  config :zelda, Zelda.Repo, database: ":memory:"
+  config :zelda, :users_module, Zelda.Users.Test
+  config :zelda, :slack_module, Zelda.Slack.Test
 end
 
 if File.exists? "#{Mix.env}.exs" do

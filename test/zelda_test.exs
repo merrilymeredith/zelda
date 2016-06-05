@@ -4,6 +4,7 @@ defmodule ZeldaTest do
   alias Zelda.Link
   alias Zelda.Commands
   alias Zelda.Ignore
+  alias Zelda.Users
 
   test "Link.match_token" do
     assert Link.match_token("foo gh:bac321 baz")    == {:ok, {:gh, "bac321"}}
@@ -32,12 +33,10 @@ defmodule ZeldaTest do
     assert Link.get_link_detail(nil)         == {:error, "No Match"}
   end
 
-
   test "Commands.handle_cmd help" do
     Commands.handle_cast({"help", [], self, %{"channel" => "mock"}}, [])
     assert_received {:"$gen_cast", {:send_message, "mock", _help_reply}}
   end
-
 
   test "Ignore" do
     slack_id   = "U123456789"
@@ -55,5 +54,12 @@ defmodule ZeldaTest do
       assert Ignore.unignore(:slack_name, slack_name)
       refute Ignore.is_ignored?(:slack_id, slack_id)
     end
+  end
+
+  test "Users" do
+    assert %{}     = Users.list_users
+    assert :ok     = Users.add_user "4321a", "Chloe"
+    assert "Chloe" = Users.lookup_by :id, "4321a"
+    assert "4321a" = Users.lookup_by :name, "Chloe"
   end
 end

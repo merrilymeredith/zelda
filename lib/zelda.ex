@@ -9,21 +9,18 @@ defmodule Zelda do
 
   def start(_type, _args) do
     import Supervisor.Spec
+    import Application, only: [get_env: 2]
 
     children = [
       worker(Zelda.Repo, []),
       worker(Zelda.Commands, []),
       worker(Zelda.Link, []),
+      worker(Zelda.Users, []),
+      worker(Zelda.Slack, []),
     ]
 
-    if Application.get_env(:zelda, :connect_slack) do
-      children = children ++ [
-        worker(Zelda.Slack, [slack_token]),
-        worker(Zelda.Users, []),
-      ]
-    end
-
-    children |> Supervisor.start_link(
+    Supervisor.start_link(
+      children,
       name:     Zelda.Sup,
       strategy: :one_for_one,
     )

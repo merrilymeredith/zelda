@@ -7,8 +7,8 @@ defmodule Zelda.Commands do
 
   use GenServer
   alias Zelda.Ignore
-  alias Zelda.Users
   alias Zelda.Slack
+  alias Zelda.Users
 
   # Client
 
