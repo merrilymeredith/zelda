@@ -5,6 +5,7 @@ defmodule Zelda.Slack.Test do
   """
 
   use GenServer
+  use Zelda.Slack.Matcher
 
   def start_link(), do: GenServer.start_link(__MODULE__, [], [name: :slack])
 
@@ -19,6 +20,6 @@ defmodule Zelda.Slack.Test do
     GenServer.cast(slack, {:send_message, channel, text})
   end
 
-  def handle_cast({:send_message, channel, text}, state), do: {:noreply, state}
+  def handle_cast({:send_message, _channel, _text}, state), do: {:noreply, state}
 end
 
