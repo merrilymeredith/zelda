@@ -47,10 +47,10 @@ defmodule Zelda.Users do
   end
 
   def start_link() do
-    GenServer.start_link Application.get_env(:zelda, :users_module), nil, [name: :users]
+    GenServer.start_link Application.get_env(:zelda, :users_module), nil, [name: __MODULE__]
   end
 
-  def add_user(user_id, user_name), do: GenServer.cast(:users, {:add, user_id, user_name})
-  def lookup_by(by, value),         do: GenServer.call(:users, {:query, by, value})
-  def list_users(),                 do: GenServer.call(:users, :list)
+  def add_user(user_id, user_name), do: GenServer.cast(__MODULE__, {:add, user_id, user_name})
+  def lookup_by(by, value),         do: GenServer.call(__MODULE__, {:query, by, value})
+  def list_users(),                 do: GenServer.call(__MODULE__, :list)
 end
