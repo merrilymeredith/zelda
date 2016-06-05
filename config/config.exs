@@ -36,6 +36,7 @@ else
   config :zelda, Zelda.Repo, database: ":memory:"
   config :zelda, :users_module, Zelda.Users.Test
   config :zelda, :slack_module, Zelda.Slack.Test
+  config :zelda, :slack_token, 'nada'
 end
 
 if File.exists? "#{Mix.env}.exs" do

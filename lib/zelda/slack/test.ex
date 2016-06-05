@@ -7,11 +7,8 @@ defmodule Zelda.Slack.Test do
   use GenServer
   use Zelda.Slack.Matcher
 
-  def start_link(), do: GenServer.start_link(__MODULE__, [], [name: :slack])
-
-  def handle_cast({:handle_incoming, "team_join", %{"user" => user}}, state) do
-    apply Application.get_env(:zelda, :users_module), :add_user, [user["id"], user["name"]]
-    {:noreply, state}
+  def start_link(_slack_token, options \\ []) do
+    GenServer.start_link(__MODULE__, [], options)
   end
 
   def reply(text, slack, %{"channel" => channel}) do

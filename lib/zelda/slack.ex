@@ -2,7 +2,7 @@ defmodule Zelda.Slack do
   @slack_module Application.get_env(:zelda, :slack_module)
 
   def start_link() do
-    apply @slack_module, :start_link, []
+    apply @slack_module, :start_link, [Zelda.slack_token, [name: :slack]]
   end
 
   def reply(text, slack, msg) do
